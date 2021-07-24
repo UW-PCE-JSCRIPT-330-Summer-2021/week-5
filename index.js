@@ -6,7 +6,8 @@ const port = process.env.PORT || 5000;
 mongoose.connect('mongodb://localhost/week5', {
   useNewUrlParser: true, 
   useCreateIndex: true, 
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useFindAndModify: true,
 }).then(() => {
   server.listen(port, () => {
    console.log(`Server is listening on http://localhost:${port}`);

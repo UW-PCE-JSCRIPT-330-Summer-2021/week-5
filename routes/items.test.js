@@ -83,7 +83,7 @@ describe("/items", () => {
           .set('Authorization', 'Bearer ' + token0)
           .send(item);
         expect(res.statusCode).toEqual(403);
-        expect(await Item.count()).toEqual(0);
+        expect(await Item.countDocuments()).toEqual(0);
       });
       it('should send 200 to admin user and store item', async () => {
         const res = await request(server)
@@ -152,7 +152,7 @@ describe("/items", () => {
         expect(res.body).toMatchObject(originalItem);
       });
     });
-    describe("GET / item %#", () => {
+    describe("GET /", () => {
       let items;
       beforeEach(async () => {
         items = (await Item.insertMany([item0, item1])).map(i => i.toJSON())

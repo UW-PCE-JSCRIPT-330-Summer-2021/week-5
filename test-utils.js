@@ -7,7 +7,8 @@ module.exports.connectDB = async () => {
   await mongoose.connect(global.__MONGO_URI__, { 
     useNewUrlParser: true, 
     useCreateIndex: true, 
-    useUnifiedTopology: true 
+    useUnifiedTopology: true,
+    useFindAndModify: true
   });
   await Promise.all(models.map(m => m.syncIndexes()));
 }
