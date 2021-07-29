@@ -1,14 +1,24 @@
 const { Router } = require("express")
 const router = Router()
-const { isLoggedIn } = require("../middleware/auth")
-//const noteDAO = require('../daos/note')
+const { isAuthorized, isAdmin } = require("../middleware/auth")
+const itemDAO = require('../daos/item')
 
-router.use(isLoggedIn)
+router.use(isAuthorized)
 
-router.post("/", async (req, res, next) => {
+router.post("/", isAdmin, async (req, res, next) => {
     try {
-        const note = await noteDAO.createNote(req.userId, req.body)
-        res.status(200).send(note)
+        const item = await itemDAO.createItem(req.body)
+        res.status(200).send(item)
+    }
+    catch (e) {
+        next(e)
+    }    
+})
+
+router.put("/:id", isAdmin, async (req, res, next) => {
+    try {
+        await itemDAO.updateItem(req.params.id, req.body)
+        res.sendStatus(200)
     }
     catch (e) {
         next(e)
@@ -17,12 +27,12 @@ router.post("/", async (req, res, next) => {
 
 router.get("/:id", async (req, res, next) => {
     try {
-        const note = await noteDAO.getNote(req.userId, req.params.id)
-        if (!note) {
+        const item = await itemDAO.getItem(req.params.id)
+        if (!item) {
             res.sendStatus(404)
         }
         else {
-            res.status(200).send(note)
+            res.status(200).send(item)
         }
     }
     catch (e) {
@@ -34,8 +44,8 @@ router.get("/:id", async (req, res, next) => {
 
 router.get("/", async (req, res, next) => {
     try {
-        const myNotes = await noteDAO.getUserNotes(req.userId)
-        res.status(200).send(myNotes)
+        const items = await itemDAO.getAllItems()
+        res.status(200).send(items)
     }
     catch (e) {
         next(e)
