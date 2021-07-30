@@ -22,7 +22,7 @@ router.post("/", async (req, res, next) => {
             //     price: item.price,
             //     title: item.title
             // });
-            items.push(item);
+            items.push(item._id);
             totalPrice += item.price;
         }
 
@@ -48,7 +48,7 @@ router.put("/:id", isAdmin, async (req, res, next) => {
     }    
 })
 
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", isAdmin, async (req, res, next) => {
     try {
         const order = await orderDAO.getOrder(req.params.id)
         if (!order) {
@@ -59,11 +59,6 @@ router.get("/:id", async (req, res, next) => {
                 res.sendStatus(404);
                 return;
             }
-            // res.status(200).send({
-            //     items: order.items,
-            //     userId: order.userId,
-            //     total: order.total
-            // })
             res.status(200).send(order);
         }
     }
@@ -74,7 +69,7 @@ router.get("/:id", async (req, res, next) => {
     }
 });
 
-router.get("/", async (req, res, next) => {
+router.get("/", isAdmin, async (req, res, next) => {
     try {
         const orders = await orderDAO.getOrdersForCustomer(req.user._id, req.isAdmin)
         res.status(200).send(orders)

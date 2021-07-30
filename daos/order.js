@@ -1,14 +1,39 @@
 const Order = require('../models/order')
+const mongoose = require('mongoose');
 
 module.exports = {}
 
 module.exports.createOrder = async (OrderObj) => {
     const order = await Order.create(OrderObj)
-    return order
+    return order.toObject()
 }
 
-module.exports.getOrder = async (_id) => {
-    return await Order.findOne({ _id }).lean()
+module.exports.getOrder = async (orderId, customerId) => {
+    // TODO: Change this to a lookup
+    //const order = await Order.findOne({ _id }).lean();
+    // const order = await Order.aggregate([
+    //     { $match: { _id: mongoose.Types.ObjectId(orderId) }},
+    //     { $lookup: {
+    //         from: "item",
+    //         localField: "items",
+    //         foreignField: "_id",
+    //         as: "item"
+    //     }
+    //     },
+    //     { $project: { userId: "$userId", items: "$item", total: "$total" }}
+    const order = await Order.aggregate([
+        { $match: { _id: mongoose.Types.ObjectId(orderId) }},
+        { $unwind: "$items" },
+        { $lookup: { from: "items",  localField: "items",  foreignField: "_id",  as: "item"  } },
+        { $unwind: "$item" },
+        { $project: { userId: "$userId", item: "$item", total: "$total" } },       
+        { $group: { _id: "$_id", userId: {$first: "$userId"}, items: {$push: "$item"}, total: {$first: "$total"} } }
+    ]).limit(1)
+    
+    if (order && order.length === 1)
+        return order[0];
+    else
+        return null;
 }
 
 module.exports.getOrdersForCustomer = async (customerId, isAdmin) => {
