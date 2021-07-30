@@ -12,7 +12,7 @@ async function isAuthorized (req, res, next) {
         tokenFromClient = authHeader.replace('Bearer ', '')
         const token = jwt.verify(tokenFromClient, SECRET_TOKEN)
         
-        req.user = token;
+        req.user = token
 
         if (!req.user || !req.user._id) {
             throw new Error("Cannot find token from provided token string")
@@ -27,9 +27,9 @@ async function isAuthorized (req, res, next) {
 
 async function isAdmin (req, res, next) {
     if (req.user.roles.includes("admin")) {
-        req.user.isAdmin = true;
+        req.user.isAdmin = true
     }
-    next();
+    next()
 }
 
 module.exports = { SECRET_TOKEN, isAuthorized, isAdmin }

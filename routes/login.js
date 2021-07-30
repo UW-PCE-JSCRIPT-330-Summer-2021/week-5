@@ -10,7 +10,7 @@ router.post("/signup", async (req, res, next) => {
     const { email, password } = req.body
     if (!email || email.length === 0) {
         res.status(400).send("No email provided")
-        return;
+        return
     }
     if (!password || password.length === 0) {
         res.status(400).send("No password provided")
@@ -32,12 +32,6 @@ router.post("/signup", async (req, res, next) => {
     }
 })
 
-/*
-expect(decodedToken.email).toEqual(user.email);
-expect(decodedToken.roles).toEqual(['user']);
-expect(decodedToken._id).toMatch(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i) // mongo _id regex
-expect(decodedToken.password).toBeUndefined();
-*/
 router.post("/", async (req, res, next) => {
     try {
         const { email, password } = req.body
@@ -61,12 +55,6 @@ router.post("/", async (req, res, next) => {
                 res.sendStatus(401)
             }
             if (bcryptRes) {
-                // const user = {
-                //     email: foundUser.email,
-                //     roles: foundUser.roles,
-                //     _id: foundUser._id
-                // };
-                
                 jwt.sign({
                     email: foundUser.email,
                     roles: foundUser.roles,

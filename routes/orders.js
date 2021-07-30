@@ -9,28 +9,24 @@ router.use(isAuthorized)
 router.post("/", async (req, res, next) => {
     try {
         const listOfItemIds = req.body;
-        let totalPrice = 0;
-        const items = [];
+        let totalPrice = 0
+        const items = []
         
         for (let i = 0; i < listOfItemIds.length; i++) {
-            let item = await itemDAO.getItem(listOfItemIds[i]);
+            let item = await itemDAO.getItem(listOfItemIds[i])
             if (!item) {
-                res.status(400).send("Invalid item");
-                return;
+                res.status(400).send("Invalid item")
+                return
             }
-            // items.push({
-            //     price: item.price,
-            //     title: item.title
-            // });
-            items.push(item._id);
-            totalPrice += item.price;
+            items.push(item._id)
+            totalPrice += item.price
         }
 
         const order = await orderDAO.createOrder({
             items,
             userId: req.user._id,
             total: totalPrice
-        });
+        })
         res.status(200).send(order)
     }
     catch (e) {
@@ -57,9 +53,9 @@ router.get("/:id", isAdmin, async (req, res, next) => {
         else {
             if (order.userId.toHexString() !== req.user._id && !req.user.isAdmin) {
                 res.sendStatus(404);
-                return;
+                return
             }
-            res.status(200).send(order);
+            res.status(200).send(order)
         }
     }
     catch (e) {
@@ -67,7 +63,7 @@ router.get("/:id", isAdmin, async (req, res, next) => {
             e.status = 400
         next(e)
     }
-});
+})
 
 router.get("/", isAdmin, async (req, res, next) => {
     try {

@@ -1,5 +1,5 @@
 const Order = require('../models/order')
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 module.exports = {}
 
@@ -8,19 +8,7 @@ module.exports.createOrder = async (OrderObj) => {
     return order.toObject()
 }
 
-module.exports.getOrder = async (orderId, customerId) => {
-    // TODO: Change this to a lookup
-    //const order = await Order.findOne({ _id }).lean();
-    // const order = await Order.aggregate([
-    //     { $match: { _id: mongoose.Types.ObjectId(orderId) }},
-    //     { $lookup: {
-    //         from: "item",
-    //         localField: "items",
-    //         foreignField: "_id",
-    //         as: "item"
-    //     }
-    //     },
-    //     { $project: { userId: "$userId", items: "$item", total: "$total" }}
+module.exports.getOrder = async (orderId) => {
     const order = await Order.aggregate([
         { $match: { _id: mongoose.Types.ObjectId(orderId) }},
         { $unwind: "$items" },
@@ -31,9 +19,9 @@ module.exports.getOrder = async (orderId, customerId) => {
     ]).limit(1)
     
     if (order && order.length === 1)
-        return order[0];
+        return order[0]
     else
-        return null;
+        return null
 }
 
 module.exports.getOrdersForCustomer = async (customerId, isAdmin) => {
@@ -44,7 +32,6 @@ module.exports.getOrdersForCustomer = async (customerId, isAdmin) => {
 }
 
 module.exports.updateOrder = async (OrderId, newObj) => {
-    //await Order.updateOne( { _id: Order._id }, { $set: { password } } )
-    await Order.updateOne({ _id: OrderId }, newObj);
+    await Order.updateOne({ _id: OrderId }, newObj)
     return true
 }

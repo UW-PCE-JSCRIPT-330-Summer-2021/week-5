@@ -17,7 +17,7 @@ module.exports.getAllItems = async () => {
 
 module.exports.updateItem = async (itemId, newObj) => {
     try {
-        await Item.updateOne({ _id: itemId }, newObj);
+        await Item.updateOne({ _id: itemId }, newObj)
         return true
     }
     catch (e) {
