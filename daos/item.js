@@ -17,8 +17,6 @@ module.exports.getAllItems = async () => {
 
 module.exports.updateItem = async (itemId, newObj) => {
     try {
-        //await Item.updateOne( { _id: item._id }, { $set: { password } } )
-        //await Item.updateOne( { _id: item._id })
         await Item.updateOne({ _id: itemId }, newObj);
         return true
     }

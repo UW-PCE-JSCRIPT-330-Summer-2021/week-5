@@ -27,6 +27,7 @@ async function isAuthorized (req, res, next) {
 
 async function isAdmin (req, res, next) {
     if (req.user.roles.includes("admin")) {
+        req.isAdmin = true;
         next();
     }
     else {
