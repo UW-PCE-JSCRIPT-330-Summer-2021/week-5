@@ -7,6 +7,10 @@ router.use(isAuthorized)
 
 router.post("/", isAdmin, async (req, res, next) => {
     try {
+        if (!req.user.isAdmin) {
+            res.sendStatus(403)
+            return
+        }
         const item = await itemDAO.createItem(req.body)
         res.status(200).send(item)
     }
@@ -17,6 +21,10 @@ router.post("/", isAdmin, async (req, res, next) => {
 
 router.put("/:id", isAdmin, async (req, res, next) => {
     try {
+        if (!req.user.isAdmin) {
+            res.sendStatus(403)
+            return
+        }        
         await itemDAO.updateItem(req.params.id, req.body)
         res.sendStatus(200)
     }

@@ -55,7 +55,7 @@ router.get("/:id", isAdmin, async (req, res, next) => {
             res.sendStatus(404)
         }
         else {
-            if (order.userId.toHexString() !== req.user._id && !req.isAdmin) {
+            if (order.userId.toHexString() !== req.user._id && !req.user.isAdmin) {
                 res.sendStatus(404);
                 return;
             }
@@ -71,7 +71,7 @@ router.get("/:id", isAdmin, async (req, res, next) => {
 
 router.get("/", isAdmin, async (req, res, next) => {
     try {
-        const orders = await orderDAO.getOrdersForCustomer(req.user._id, req.isAdmin)
+        const orders = await orderDAO.getOrdersForCustomer(req.user._id, req.user.isAdmin)
         res.status(200).send(orders)
     }
     catch (e) {
