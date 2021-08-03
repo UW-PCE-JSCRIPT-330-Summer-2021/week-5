@@ -125,7 +125,7 @@ describe("/items", () => {
         newItem._id = newItem._id.toString();
         expect(newItem).toMatchObject({ ...originalItem, price: originalItem.price + 1 });
       });
-    });
+    });+
     describe.each([item0, item1])("GET /:id item %#", (item) => {
       let originalItem;
       beforeEach(async () => {
