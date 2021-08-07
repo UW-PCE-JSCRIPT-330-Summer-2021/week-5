@@ -1,5 +1,5 @@
 function errorResponse (err, req, res, next) {
-
+    
     try {
         if(err.message.includes('duplicate'))
         {

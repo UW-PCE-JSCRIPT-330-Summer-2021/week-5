@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Order = require('../models/order');
 
 const itemDAO = require('./item');
@@ -20,6 +21,7 @@ module.exports.createOrder = async (order) => {
         }, 0);
 
         order.total = sum;
+
         const createdOrder = await Order.create(order);
         return createdOrder;
 
@@ -31,24 +33,49 @@ module.exports.createOrder = async (order) => {
 module.exports.getOrderById = async (order_id) => {
     try {
 
-        const foundOrder = await Order.findOne({ _id: order_id }).lean();
+        if(!mongoose.Types.ObjectId(order_id)) {
+            throw new Error('Order Id is invalid');
+        } else {
 
-        let foundItems = [];
-        for(let idx = 0; idx < foundOrder.items.length; idx++) {
-            const foundItem = (await itemDAO.getItemById(foundOrder.items[idx]));
-            const item = {
-                title: foundItem.title,
-                price: foundItem.price
-            };
-
-            foundItems.push(item);
+            const foundOrder = await Order.aggregate([
+                { $match: { _id: mongoose.Types.ObjectId(order_id) }},
+                { $unwind: "$items" },
+                { $lookup: {
+                    from: "items",
+                    localField: "items",
+                    foreignField: "_id",
+                    as: "orderItems"
+                }},
+                { $unwind: "$orderItems" },
+                { $group: {
+                    _id: "$_id",
+                    userId: { $first: "$userId" },
+                    items: { $push: "$orderItems" },
+                    total: { $first: "$total" }
+                }},
+                { $project: {
+                    _id: 0,
+                    items: {
+                        _id: 0,
+                        __v: 0
+                    }
+                }}
+            ]).limit(1);
+    
+            if(!foundOrder || foundOrder.length === 0) {
+                return null
+            } else {
+                return foundOrder[0];
+            }
         }
 
-        foundOrder.items = foundItems;
-        return foundOrder;
-
     } catch(e) {
-        throw new Error(`Order ${order_id} not found`);
+        console.log('Error > ',e.message);
+        if(e.message.includes('invalid')) {
+            throw e;
+        } else {
+            throw new Error(`Order ${order_id} not found`);
+        }
     }
 }
 
