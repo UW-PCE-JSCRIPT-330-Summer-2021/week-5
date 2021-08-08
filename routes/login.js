@@ -57,6 +57,7 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+
 // Change Password POST /login/password
 // POST /password - If the user is logged in, store the incoming password using their userId
 router.post("/password", isAuthorized, async (req, res, next) => {

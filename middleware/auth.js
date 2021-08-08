@@ -22,4 +22,12 @@ async function isAuthorized (req, res, next) {
   }
 };
 
-module.exports = { isAuthorized, secret };
+async function isAdmin (req, res, next) {
+  if (req.user.roles.includes('admin')) {
+    next();
+  } else {
+    res.sendStatus(403);
+  }
+}
+
+module.exports = { isAuthorized, secret, isAdmin };
