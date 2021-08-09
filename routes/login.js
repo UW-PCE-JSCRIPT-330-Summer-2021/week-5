@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const userDAO = require('../daos/user');
 const { isAuthorized, secret } = require('../middleware/auth');
-const errorHandler = require('../middleware/error');
+const { errorHandler } = require('../middleware/error');
 
 
 // Signup: POST /login/signup

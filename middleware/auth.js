@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const secret = 'my super secret';
+const secret = 'my_super_secret';
 
 //isAuthorized middleware
 async function isAuthorized (req, res, next) {
@@ -24,6 +24,7 @@ async function isAuthorized (req, res, next) {
 
 async function isAdmin (req, res, next) {
   if (req.user.roles.includes('admin')) {
+    req.user.isAdmin = true;
     next();
   } else {
     res.sendStatus(403);
