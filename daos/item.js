@@ -8,7 +8,7 @@ module.exports.getById = async (itemId) => {
   //  if (!mongoose.Types.ObjectId.isValid(userId)) {
   //   return null;
   // }
-  return Note.findOne({ _id: itemId }).lean();
+  return Item.findById( itemId ).lean();
 }
   
 module.exports.getAll = async () => {
