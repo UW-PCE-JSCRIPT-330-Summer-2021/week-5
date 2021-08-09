@@ -10,10 +10,12 @@ module.exports = (async (err, req, res, next) => {
             res.status(400).send('Password is required');
     } else if (err.message.includes("duplicate key")) {   
         res.status(409).send('Email already in use.');
+    } else if (err.message.includes("Not an Admin")) {   
+        res.status(403).send('Access denied');
     } else if (err.message.includes("Password needed for logout")) {   
         res.status(409).send('Password not found');
-    } else if (err.message.includes("Invalid note ID")) {   
-        res.status(404).send('Invalid note ID');
+    } else if (err.message.includes("Invalid item ID")) {   
+        res.status(404).send('Invalid item ID');
     } else if (err.message.includes("Password match failed") 
         || err.message.includes("Cannot read property 'password' of null")) {   
             res.status(401).send("Password doesn't match");

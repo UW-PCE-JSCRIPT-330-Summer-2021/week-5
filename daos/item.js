@@ -1,23 +1,23 @@
 const mongoose = require('mongoose');
 
-const Note = require('../models/note');
+const Item = require('../models/item');
 
 module.exports = {};
 
-module.exports.getById = async (noteId, userId) => {
+module.exports.getById = async (itemId) => {
   //  if (!mongoose.Types.ObjectId.isValid(userId)) {
   //   return null;
   // }
-  return Note.findOne({ _id: noteId, userId: userId }).lean();
+  return Note.findOne({ _id: itemId }).lean();
 }
   
-module.exports.getByUserId = async (userId) => {
-  return Note.find({userId: userId});
+module.exports.getAll = async () => {
+  return Item.find().lean();
 }
   
-  module.exports.create = async (noteData) => {
+  module.exports.create = async (itemData) => {
     try {
-      const created = Note.create(noteData);
+      const created = Item.create(itemData);
       return created;
     } catch (e) {
       if (e.message.includes('validation failed') || e.message.includes('duplicate key')) {
