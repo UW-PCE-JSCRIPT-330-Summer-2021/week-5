@@ -66,6 +66,24 @@ router.get("/:id", async (req, res, next) => {
     }
 });
 
+
+// Update
+router.put("/:id", async (req, res, next) => { 
+    try  {
+        if (!req.isAdmin) { 
+            throw new Error('Not an Admin');
+        }
+        const itemData = {_id: req.params.id, title: req.body.title, price: req.body.price, }
+        const success = await itemsDAO.updateById(itemData);
+        if (!success) {
+            throw new Error("Item not found");
+        }
+        res.json(success);
+    } catch(e) {
+        next(e);
+    }
+});
+
 router.use(errorReport);
 
 
