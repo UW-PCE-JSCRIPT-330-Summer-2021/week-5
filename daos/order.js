@@ -26,10 +26,26 @@ module.exports.getOrderById = async (orderId) => {
         const orderData = await Order.aggregate([
             { $match: { _id: mongoose.Types.ObjectId(orderId) }},
             { $unwind: '$items' },
-            { $lookup: { from: 'items',  localField: 'items',  foreignField: '_id',  as: 'itemData'  } },
+            { $lookup: { 
+                from: 'items',
+                localField: 'items',
+                foreignField: '_id',
+                as: 'itemData'  
+            } },
             { $unwind: '$itemData' },
-            { $project: { userId: '$userId', item: '$itemData', total: '$total' } },       
-            { $group: { _id: '$_id', userId: { $first: '$userId'}, items: {$push: '$itemData'}, total: { $first: '$total' } } }
+            { $project: {
+                _id: 0,
+                    items: {
+                        _id: 0,
+                        __v: 0
+                    }
+            } },       
+            { $group: {
+                _id: '$_id',
+                userId: { $first: '$userId' },
+                items: { $push: '$itemData' },
+                total: { $first: '$total' }
+            } }
         ]);
         return orderData[0];
     } catch (e) {

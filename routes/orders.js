@@ -5,6 +5,7 @@ const orderDAO = require('../daos/order');
 const itemDAO = require('../daos/item')
 const { isAllowed, isAdmin } = require('../middlewares/auth');
 const { errorHandler } = require('../middlewares/error');
+const order = require("../models/order");
 
 // return all orders made by user
 router.get("/", isAllowed, isAdmin, async (req, res, next) => {
@@ -28,15 +29,17 @@ router.get("/:id", isAllowed, isAdmin, async (req, res, next) => {
             const orderData = await orderDAO.getOrderById(req.params.id);
             if (!orderData) {
                 res.sendStatus(400);
-            } res.json(orderData);
+            } else {
+                res.json(orderData);
+            }
         } else {
-            const userOrder = await orderDAO.getByUserId(req.userInfo._id, orderId);
+            const userOrder = await orderDAO.getByUserId(req.userInfo._id, req.params.id);
             if (!userOrder) {
                 res.sendStatus(404);
             } else {
-            res.json(userOrder);
+                res.json(userOrder);
+            }
         }
-    }
     } catch (e) {
         next(e);
     }
