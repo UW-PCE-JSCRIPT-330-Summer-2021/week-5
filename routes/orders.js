@@ -9,7 +9,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const secret = 'my_super_secret';
 const isValid = require("../middleware/authentication");
-const isAdmin = require("../middleware/authorization");
 
 router.use(async (req, res, next) => {
     isValid(req, res, next);
@@ -41,7 +40,7 @@ router.post("/", async (req, res, next) => {
 // GET /orders - return all the orders made by the user making the request
 
 router.get("/", async (req, res, next) => {
-    if(!isAdmin((req.user.roles))){
+        if(!req.user.admin){
         const orderForUser = await orderDAO.getOrderByUserId( req.user._id);
         if(!orderForUser){
             res.status(400).send('not found');         
@@ -60,7 +59,7 @@ router.get("/", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
 
     let orderId = req.params.id;
-    if(isAdmin((req.user.roles))){
+        if(req.user.admin){
         const orderForAdmin = await orderDAO.getOrderById( orderId);
         if(!orderForAdmin){
             res.status(400).send('not found');         

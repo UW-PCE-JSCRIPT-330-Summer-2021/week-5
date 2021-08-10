@@ -25,6 +25,10 @@ const isValid
 
     req.token = token;
     req.user = user;
+    if(user.roles.includes('admin')){
+        req.user.admin = true;
+    }
+    
     next();
 }
 

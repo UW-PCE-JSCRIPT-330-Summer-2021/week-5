@@ -3,7 +3,6 @@ const router = Router({ mergeParams: true });
 
 const itemDAO = require("../daos/item");
 const isValid = require("../middleware/authentication");
-const isAdmin = require("../middleware/authorization");
 
 router.use(async (req, res, next) => {
     isValid(req, res, next);
@@ -18,7 +17,8 @@ router.post("/", async (req, res, next) => {
         res.sendStatus(404).send("Item not found");
         return;
     }
-    if (!isAdmin(req.user.roles)) {
+   
+    if (!req.user.admin) {
         res.sendStatus(403);
         return;
     }
@@ -38,7 +38,8 @@ router.post("/", async (req, res, next) => {
 router.put("/:id", async (req, res, next) => {
     const item = req.body;
     const id = req.params.id;
-    if (!isAdmin(req.user.roles)) {
+  
+    if (!req.user.admin) {
         res.sendStatus(403);
         return;
     }
