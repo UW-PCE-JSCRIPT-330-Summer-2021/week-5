@@ -17,9 +17,12 @@ module.exports.getOrderByUserId = async (userId) => {
 }
 
 module.exports.getOrderByOrderId = async (orderId) => {
-  const order = await Order.aggregate([
+  // const order = await Order.aggregate([
+  //   { $match: { _id: mongoose.Types.ObjectId(orderId) }},
+  //   { $group: { _id: '$_id', userId: { }}}
+  // ]);
+  // return order;
 
-  ]);
-  return order;
+  
 }
 

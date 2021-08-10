@@ -3,6 +3,6 @@ const router = Router();
 
 router.use("/login", require('./login'));
 router.use("/items", require('./items'));
-router.use("/order", require('./orders'));
+router.use("/orders", require('./orders'));
 
 module.exports = router;

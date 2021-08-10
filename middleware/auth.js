@@ -8,11 +8,11 @@ async function isAuthorized (req, res, next) {
     if (bearerToken) {
       const tokenString = bearerToken.replace('Bearer ', '');
       const decoded = jwt.verify(tokenString, secret);
-      if (decoded) {
+      if (!decoded) {
+        res.sendStatus(401);
+      } else {
         req.user = decoded;
         next();
-      } else {
-        res.sendStatus(401);
       }
     } else {
       res.sendStatus(401);

@@ -14,7 +14,18 @@ router.use(isAuthorized);
 // The order should also have the userId of the user placing the order.
 router.post("/", async (req, res, next) => {
   try {
-
+    const items = req.body;
+    let total = 0;
+    for (let i = 0; i < items.length; i++) {
+      const item = await itemDAO.getItem(items[i]); 
+      if (item) {
+        total += item.price;
+      } else {
+        res.sendStatus(400);
+      }
+    }
+    const order = await orderDAO.createOrder({ items, total: total, userId: req.user._id });
+    res.json(order);
   } catch (e) {
     next (e)
   }
@@ -41,10 +52,12 @@ router.get("/", isAdmin, async (req, res, next) => {
 // An admin user should be able to get any order.
 router.get("/:id", isAdmin, async (req, res, next) => {
   try {
+    let orderId = req.params.id;
+    const order = await orderDAO.getOrderByOrderId(orderId);
     if (!req.user.isAdmin) {
       res.sendStatus(404);
     } else {
-
+      res.json(order);
     }
   } catch (e) {
     next (e)
