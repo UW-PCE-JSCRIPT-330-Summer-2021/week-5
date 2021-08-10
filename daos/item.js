@@ -22,7 +22,6 @@ module.exports.create = async (title, price) => {
     }
 };
 
-
 module.exports.getAll = async () => {
     try {
         const items = await Item.find({}).lean();
@@ -31,7 +30,6 @@ module.exports.getAll = async () => {
         throw e;
     }
 };
-
 
 module.exports.getById = async (itemId) => {
     if (!mongoose.Types.ObjectId.isValid(itemId)) {
@@ -48,7 +46,6 @@ module.exports.getById = async (itemId) => {
     }
 };
 
-
 module.exports.updateItem = async (itemId, price) => {
     if (!mongoose.Types.ObjectId.isValid(itemId)) {
         throw new BadDataError('Invalid item id');
@@ -64,7 +61,6 @@ module.exports.updateItem = async (itemId, price) => {
         }
     }
 };
-
 
 module.exports.calculateSum = async (items) => {
     try {

@@ -23,19 +23,15 @@ router.post("/", isAdmin, async (req, res, next) => {
     }
 });
 
-
 //Get all items: GET /items - open to all users
 router.get("/", async (req, res, next) => {
-
     const items = await itemDAO.getAll();
     if (items) {
         res.json(items);
     } else {
         res.status(404).send("Items not found");
     }
-
 });
-
 
 //Get item by id: GET /items/:id
 router.get("/:id", async (req, res, next) => {
@@ -48,7 +44,6 @@ router.get("/:id", async (req, res, next) => {
     }
 });
 
-
 //Update a note: PUT /items/:id - restricted to users with the "admin" role
 router.put("/:id", isAdmin, async (req, res, next) => {
     const itemId = req.params.id;
@@ -57,9 +52,8 @@ router.put("/:id", isAdmin, async (req, res, next) => {
     if (updatedItem) {
         res.json(updatedItem);
     } else {
-        res.status(404).send("Item has not been updated");
+        res.status(404).send("Item needs to be updated");
     }
-
 });
 
 module.exports = router;

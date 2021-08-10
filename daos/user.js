@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const User = require('../models/user');
 
 const bcrypt = require('bcrypt');
@@ -27,7 +26,6 @@ module.exports.signUp = async (email, password) => {
     }
 };
 
-
 module.exports.login = async (userData) => {
     const user = await User.findOne({
         email: userData
@@ -39,7 +37,7 @@ module.exports.login = async (userData) => {
     }
 };
 
-module.exports.changePasswprd = async (email, password) => {
+module.exports.changePassword = async (email, password) => {
     const user = await User.findOne({
         email: email
     });

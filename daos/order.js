@@ -16,7 +16,6 @@ module.exports.create = async (userId, items, total) => {
     }
 };
 
-
 module.exports.getAll = async () => {
     try {
         const orders = await Order.find({}).lean();
@@ -25,7 +24,6 @@ module.exports.getAll = async () => {
         throw e;
     }
 };
-
 
 module.exports.getAllByUserId = async (userId) => {
     const myOrders = await Order.find({
@@ -49,16 +47,15 @@ module.exports.getUserForId = async (orderId) => {
     }
 };
 
-
 module.exports.getById = async (orderId) => {
     if (!mongoose.Types.ObjectId.isValid(orderId)) {
         throw new BadDataError('Invalid order id');
     } else {
         try {
-            const requireOrderId = mongoose.Types.ObjectId(orderId)
+            const reqOrderId = mongoose.Types.ObjectId(orderId)
             const order = await Order.aggregate([
                 { $match: {
-                    _id: requireOrderId
+                    _id: reqOrderId
                 }},
                 { $lookup: {
                     from: "items",

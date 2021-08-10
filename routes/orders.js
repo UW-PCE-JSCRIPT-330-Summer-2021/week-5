@@ -23,12 +23,11 @@ router.post("/", async (req, res, next) => {
             } else {
                 res.sendStatus(404);
             }
-        } catch (error) {
+        } catch (e) {
             res.sendStatus(404)
         }
     }
 });
-
 
 //Get my orders: GET /orders - return all orders made by the user making the request
 router.get("/", async (req, res, next) => {
@@ -52,7 +51,6 @@ router.get("/", async (req, res, next) => {
     }
 });
 
-
 //Get an order: GET /order/:id
 router.get("/:id", async (req, res, next) => {
     const orderId = req.params.id;
@@ -61,17 +59,17 @@ router.get("/:id", async (req, res, next) => {
         if (order) {
             res.json(order);
         } else {
-            res.status(404).send("Order not found");
+            res.sendStatus(404);
         }
     } else {
         const userId = req.user._id;
-        const orderUserId = await orderDAO.getUserforId(orderId);
+        const orderUserId = await orderDAO.getUserForId(orderId);
         if (userId == orderUserId) {
             const order = await orderDAO.getById(orderId);
             if (order) {
                 res.json(order);
             } else {
-                res.status(404).send("Order not found");
+                res.sendStatus(404);;
             }
         } else {
             res.sendStatus(404);
