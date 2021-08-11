@@ -1,13 +1,9 @@
 const { Router } = require("express");
 const router = Router();
 
-// const jwt = require('jsonwebtoken');
-// const secret = 'KEQZOjws7PPb2pPoFIIn';
-
 const itemsDAO = require('../daos/item');
-const item = require("../models/item");
 
-const isLoggedIn = require("../middleware/IsLoggedIn");
+const isLoggedIn = require("../Middleware/isAuthorized");
 const isAdmin = require("../middleware/isAdmin");
 const errorReport = require("../middleware/ErrorReport");
 
@@ -42,7 +38,6 @@ router.post("/", async (req, res, next) => {
         if (!req.tokenIsValid) { 
             throw new Error('Token is Invalid');
         }
-        // const items = await itemsDAO.getByUserId(req.payload.userId);
         const items = await itemsDAO.getAll();
         res.json(items);
     } catch(e) {      

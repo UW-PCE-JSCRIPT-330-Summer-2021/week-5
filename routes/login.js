@@ -8,9 +8,8 @@ const secret = 'KEQZOjws7PPb2pPoFIIn';
 const bCrypt = require('bcrypt');
 
 const userDAO = require('../daos/user');
-const user = require("../models/user");
 
-const isLoggedIn = require("../middleware/IsLoggedIn");
+const isLoggedIn = require("../Middleware/isAuthorized");
 const errorReport = require("../middleware/ErrorReport");
 
 router.use(async (req, res, next) => {

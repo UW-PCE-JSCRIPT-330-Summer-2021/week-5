@@ -1,14 +1,10 @@
 const { Router } = require("express");
 const router = Router();
 
-// const jwt = require('jsonwebtoken');
-// const secret = 'KEQZOjws7PPb2pPoFIIn';
-
 const ordersDAO = require('../daos/order');
 const itemsDAO = require('../daos/item');
-const order = require("../models/order");
 
-const isLoggedIn = require("../middleware/IsLoggedIn");
+const isLoggedIn = require("../Middleware/isAuthorized");
 const isAdmin = require("../middleware/isAdmin");
 const errorReport = require("../middleware/ErrorReport");
 
@@ -27,29 +23,28 @@ router.post("/", async (req, res, next) => {
         if (reqBody){
             const itemData = await itemsDAO.getByIds(reqBody);
             console.log(itemData)
-            // if (itemData && itemData.length != 0){
-            //     let total = 0;
-            //     itemData.forEach((element) => {
-            //         total += element.price;
-            //     });
             if (itemData && itemData.length != 0){
                 let total = 0;
+                let items = [];
                 reqBody.forEach(idToAdd => { 
                     itemData.find((item) => {
                         if (item._id == idToAdd){
+                            items.push(item);
                             total += item.price;
                         }
-                    });                    
+                    });
                 });
-                // console.log(total);
+                if (reqBody.length != items.length) {
+                    throw new Error('item not found')
+                }
                 const orderData = {
                     userId: req.user._id,
-                    items: reqBody,
+                    items: items,
                     total: total
                 };
                 console.log(orderData);
 
-                const created = ordersDAO.create(orderData);
+                const created = await ordersDAO.create(orderData);
                 res.json(created);
             } else {
                 throw new BadDataError('Item not found');
@@ -67,9 +62,13 @@ router.post("/", async (req, res, next) => {
         if (!req.tokenIsValid) { 
             throw new Error('Token is Invalid');
         }
-        // const orders = await ordersDAO.getByUserId(req.payload.userId);
-        const orders = await ordersDAO.getAll();
-        res.json(orders);
+        if (req.isAdmin) {
+            const orders = await ordersDAO.getAll();
+            res.json(orders);
+        } else {
+            const orders = await ordersDAO.getAllByUserId(req.user._id);
+            res.json(orders);
+        }
     } catch(e) {      
         next(e);
     }
@@ -81,38 +80,27 @@ router.get("/:id", async (req, res, next) => {
             throw new Error('Token is Invalid');
         }
         const orderId = req.params.id;
+        console.log(orderId);
         const order = await ordersDAO.getById(orderId);
         if (!order) {
             throw new Error("Invalid order ID");
         }
+
+        if (!req.isAdmin){
+            console.log(`(order.userId = ${order.userId} AND req.user._id = ${req.user._id}`)
+            if (order.userId.toString() !== req.user._id.toString()) {
+                throw new Error("Invalid order ID");
+            }
+        }
+        
         res.json(order);
     } catch(e) {      
         next(e);
     }
 });
 
-
-// Update
-router.put("/:id", async (req, res, next) => { 
-    try  {
-        if (!req.isAdmin) { 
-            throw new Error('Not an Admin');
-        }
-        const orderData = {_id: req.params.id, title: req.body.title, price: req.body.price, }
-        const success = await ordersDAO.updateById(orderData);
-        if (!success) {
-            throw new Error("Order not found");
-        }
-        res.json(success);
-    } catch(e) {
-        next(e);
-    }
-});
-
 router.use(errorReport);
 
-
-  
 module.exports = router;
   
   

@@ -1,21 +1,19 @@
 const mongoose = require('mongoose');
 
-const { update } = require('../models/order');
 const Order = require('../models/order');
-const orderDAO = require('../daos/item');
-const itemDao = require('../daos/item');
 
 module.exports = {};
 
 module.exports.getById = async (orderId) => {
-    //  if (!mongoose.Types.ObjectId.isValid(userId)) {
-    //   return null;
-    // }
-    return Order.findById( orderId ).lean();
-  }
+  return Order.findOne({ _id: orderId }).populate("items").lean();
+}
     
   module.exports.getAll = async () => {
     return Order.find().lean();
+  }
+  
+  module.exports.getAllByUserId = async (userId) => {
+    return Order.find({userId: userId}).lean();
   }
     
   module.exports.create = async (itemData) => {
