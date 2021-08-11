@@ -4,9 +4,12 @@ const secret = 'my_super_secret';
 //isAuthorized middleware
 async function isAuthorized (req, res, next) {
   const bearerToken = req.headers.authorization;
-  try {    
-    if (bearerToken) {
-      const tokenString = bearerToken.replace('Bearer ', '');
+  try {  
+    if (!bearerToken) {
+      res.sendStatus(401);
+      return;
+    } 
+    const tokenString = bearerToken.replace('Bearer ', '');
       const decoded = jwt.verify(tokenString, secret);
       if (!decoded) {
         res.sendStatus(401);
@@ -14,9 +17,6 @@ async function isAuthorized (req, res, next) {
         req.user = decoded;
         next();
       }
-    } else {
-      res.sendStatus(401);
-    }
   } catch (e) {
     res.sendStatus(401);
   }
@@ -25,10 +25,8 @@ async function isAuthorized (req, res, next) {
 const isAdmin = (req, res, next) => {
   if (req.user.roles.includes('admin')) {
     req.user.isAdmin = true;
-    next();
-  } else {
-    res.sendStatus(403);
-  }
+  } 
+  next();
 }
 
 module.exports = { isAuthorized, secret, isAdmin };

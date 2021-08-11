@@ -48,9 +48,9 @@ module.exports.getOrderByOrderId = async (orderId) => {
   }
 }
 
-module.exports.getOrderByUserId = async (userId) => {
+module.exports.getOrderByUserId = async (id) => {
   try {
-    const order = await Order.find({ userId: userId }).lean();
+    const order = await Order.find({ userId: id }).lean();
     return order;
   } catch (e) {
     next (e)

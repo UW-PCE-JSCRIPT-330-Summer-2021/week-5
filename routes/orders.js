@@ -53,6 +53,7 @@ router.post("/", async (req, res, next) => {
       const item = await itemDAO.getItem(itemIds[i]); 
       if (!item) {
         res.sendStatus(400);
+        return;
       } else {
         total += item.price;
       }
