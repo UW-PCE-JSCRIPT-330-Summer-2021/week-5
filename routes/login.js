@@ -16,14 +16,15 @@ router.post("/signup", async (req, res, next) => {
   try {
     if (!email || !password || email === '' || password === '') {
       res.sendStatus(400);
-    }
-    const existingEmail = await userDAO.getUser(email);
-    if (existingEmail) {
-      res.sendStatus(409);
     } else {
-      const savedHash = await bcrypt.hash(password, 10);
-      const newUser = await userDAO.createUser({ email, password: savedHash });
-      res.json(newUser);
+      const existingEmail = await userDAO.getUser(email);
+      if (existingEmail) {
+        res.sendStatus(409);
+      } else {
+        const savedHash = await bcrypt.hash(password, 10);
+        const newUser = await userDAO.createUser({ email, password: savedHash });
+        res.json(newUser);
+      }
     }
   } catch (e) {
     next (e);

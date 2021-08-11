@@ -47,17 +47,17 @@ router.get("/:id", isAdmin, async (req, res, next) => {
 // The order should also have the userId of the user placing the order.
 router.post("/", async (req, res, next) => {
   try {
-    const items = req.body;
+    const itemIds = req.body;
     let total = 0;
-    for (let i = 0; i < items.length; i++) {
-      const item = await itemDAO.getItem(items[i]); 
-      if (item) {
-        total += item.price;
-      } else {
+    for (let i = 0; i < itemIds.length; i++) {
+      const item = await itemDAO.getItem(itemIds[i]); 
+      if (!item) {
         res.sendStatus(400);
+      } else {
+        total += item.price;
       }
     }
-    const order = await orderDAO.createOrder({ items, total: total, userId: req.user._id });
+    const order = await orderDAO.createOrder({ items: itemIds, total: total, userId: req.user._id });
     res.json(order);
   } catch (e) {
     next (e)

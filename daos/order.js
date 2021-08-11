@@ -8,7 +8,7 @@ module.exports.createOrder = async (orderObj) => {
     const newOrder = await Order.create(orderObj);
     return newOrder;
   } catch (e) {
-    next (e)
+    next (e);
   }
 }
 

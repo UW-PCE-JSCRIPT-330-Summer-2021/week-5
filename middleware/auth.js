@@ -4,7 +4,7 @@ const secret = 'my_super_secret';
 //isAuthorized middleware
 async function isAuthorized (req, res, next) {
   const bearerToken = req.headers.authorization;
-  try {
+  try {    
     if (bearerToken) {
       const tokenString = bearerToken.replace('Bearer ', '');
       const decoded = jwt.verify(tokenString, secret);
