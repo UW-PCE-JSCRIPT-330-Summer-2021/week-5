@@ -20,7 +20,7 @@ router.post("/", async (req, res, next) => {
       const item = await itemDAO.getItem(items[i]); 
       if (item) {
         total += item.price;
-      } else {
+      } else if (!item) {
         res.sendStatus(400);
       }
     }
@@ -54,7 +54,7 @@ router.get("/:id", isAdmin, async (req, res, next) => {
   try {
     let orderId = req.params.id;
     const order = await orderDAO.getOrderByOrderId(orderId);
-    if (!req.user.isAdmin) {
+    if (!req.user.isAdmin || order.userId !== req.user._id) {
       res.sendStatus(404);
     } else {
       res.json(order);
