@@ -22,7 +22,7 @@ async function isAuthorized (req, res, next) {
   }
 };
 
-async function isAdmin (req, res, next) {
+const isAdmin = (req, res, next) => {
   if (req.user.roles.includes('admin')) {
     req.user.isAdmin = true;
     next();

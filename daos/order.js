@@ -1,19 +1,24 @@
+const mongoose = require('mongoose');
 const Order = require('../models/order');
 module.exports = {};
 
+
 module.exports.createOrder = async (orderObj) => {
-  const order = await Order.create(orderObj);
-  return order;
+  try {
+    const newOrder = await Order.create(orderObj);
+    return newOrder;
+  } catch (e) {
+    next (e)
+  }
 }
 
 module.exports.getAllOrders = async () => {
-  const orders = await Order.find().lean();
-  return orders;
-}
-
-module.exports.getOrderByUserId = async (userId) => {
-  const order = await Order.find({ userId: userId }).lean();
-  return order;
+  try {
+    const orders = await Order.find().lean();
+    return orders;
+  } catch (e) {
+    next (e)
+  }
 }
 
 module.exports.getOrderByOrderId = async (orderId) => {
@@ -29,16 +34,24 @@ module.exports.getOrderByOrderId = async (orderId) => {
         as: 'fullItemInfo' 
       }},
       { $unwind: '$fullItemInfo' },
-      { $project: {
-        userId: '$userId', item: '$item', total: '$total'
-      }},
       { $group: { 
         _id: '$_id', 
         userId: { $first: '$userId' }, 
         items: { $push: '$fullItemInfo' }, 
         total: { $first: '$total' }}},
+      { $project: {
+        _id: 0, items: { __v: 0, _id: 0 }}}
     ]);
     return order[0];
+  } catch (e) {
+    next (e)
+  }
+}
+
+module.exports.getOrderByUserId = async (userId) => {
+  try {
+    const order = await Order.find({ userId: userId }).lean();
+    return order;
   } catch (e) {
     next (e)
   }

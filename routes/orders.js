@@ -7,30 +7,6 @@ const { errorHandler } = require('../middleware/error');
 
 router.use(isAuthorized);
 
-// Create: POST /orders - open to all users
-// Takes an array of item _id values (repeat values can appear). 
-// Order should be created with a total field with the total cost of all the items 
-// from the time the order is placed (as the item prices could change). 
-// The order should also have the userId of the user placing the order.
-router.post("/", async (req, res, next) => {
-  try {
-    const items = req.body;
-    let total = 0;
-    for (let i = 0; i < items.length; i++) {
-      const item = await itemDAO.getItem(items[i]); 
-      if (item) {
-        total += item.price;
-      } else if (!item) {
-        res.sendStatus(400);
-      }
-    }
-    const order = await orderDAO.createOrder({ items, total: total, userId: req.user._id });
-    res.json(order);
-  } catch (e) {
-    next (e)
-  }
-});
-
 // Get my orders: GET /orders - return all the orders made by the user making the request
 router.get("/", isAdmin, async (req, res, next) => {
   try {
@@ -54,11 +30,35 @@ router.get("/:id", isAdmin, async (req, res, next) => {
   try {
     let orderId = req.params.id;
     const order = await orderDAO.getOrderByOrderId(orderId);
-    if (!req.user.isAdmin || order.userId !== req.user._id) {
-      res.sendStatus(404);
-    } else {
+    if (req.user.isAdmin || order.userId == req.user._id) {
       res.json(order);
+    } else {
+      res.sendStatus(404);
     }
+  } catch (e) {
+    next (e)
+  }
+});
+
+// Create: POST /orders - open to all users
+// Takes an array of item _id values (repeat values can appear). 
+// Order should be created with a total field with the total cost of all the items 
+// from the time the order is placed (as the item prices could change). 
+// The order should also have the userId of the user placing the order.
+router.post("/", async (req, res, next) => {
+  try {
+    const items = req.body;
+    let total = 0;
+    for (let i = 0; i < items.length; i++) {
+      const item = await itemDAO.getItem(items[i]); 
+      if (item) {
+        total += item.price;
+      } else {
+        res.sendStatus(400);
+      }
+    }
+    const order = await orderDAO.createOrder({ items, total: total, userId: req.user._id });
+    res.json(order);
   } catch (e) {
     next (e)
   }
