@@ -6,7 +6,6 @@ const { errorHandler } = require('../middleware/error');
 
 const orderDao = require('../daos/order');
 const itemDao = require('../daos/item');
-const userDao = require('../daos/user');
 
 // Create: POST /orders - open to all users
 router.post("/", isAuthorized, async (req, res, next) => {
@@ -15,7 +14,7 @@ router.post("/", isAuthorized, async (req, res, next) => {
     for (let i = 0; i < req.body.length; i++) {
       let thisItem = await itemDao.getItem(req.body[i]);
       if (!thisItem) {
-        res.status(400).send("Invalid item ID");
+        return res.status(400).send("Invalid item ID");
       } else {
         totalPrice += thisItem.price;
       }
