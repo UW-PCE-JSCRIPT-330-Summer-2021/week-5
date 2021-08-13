@@ -60,3 +60,5 @@ router.put("/:id", isAdmin, async (req, res, next) => {
         next(e)
     }
 });
+
+module.exports = router;

@@ -26,5 +26,3 @@ module.exports.updatePassword = async (userId, password) => {
         throw e
     }
 };
-
-module.exports = router;

@@ -33,5 +33,3 @@ module.exports.updateItem = async (itemId, newObj) => {
         throw e
     }
 };
-
-module.exports = router;

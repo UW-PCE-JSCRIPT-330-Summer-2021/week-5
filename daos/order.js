@@ -33,5 +33,3 @@ module.exports.getOrderByUser = async (userId) => {
         throw e
     }
 };
-
-module.exports = router;

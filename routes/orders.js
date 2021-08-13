@@ -1,4 +1,4 @@
-const { Router } = required('express');
+const { Router } = require('express');
 const router = Router();
 const orderDAO = require('../daos/order');
 const itemDAO = require('../daos/item');
@@ -63,3 +63,4 @@ router.post("/", isAuthorized, async (req, res, next) => {
     }
 });
 
+module.exports = router;

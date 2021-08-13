@@ -12,7 +12,7 @@ const isAuthorized = async (req, res, next) => {
         req.user = decoded;
     } catch (err) {
         return res.status(401).send("Invalid Token");
-    }
+    } next()
 };
 
 const isAdmin = async (req, res, next) => {
