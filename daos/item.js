@@ -2,12 +2,11 @@ const Item = require('../models/item');
 
 module.exports = {};
 
-module.exports.createItem = async (newObj) => {
+module.exports.createItem = async (itemObj) => {
     try {
-        const createNewItem = await Item.create(newObj);
-        return createNewItem;
+        return await Item.create(itemObj);
     } catch (e) {
-        next(e)
+        throw e
     }
 };
 
@@ -15,7 +14,7 @@ module.exports.getItemById = async (itemId) => {
     try {
         return await Item.findOne({ itemId }).lean();
     } catch (e) {
-        next(e)
+        throw e
     }
 };
 
@@ -23,16 +22,16 @@ module.exports.getAll = async () => {
     try {
         return await Item.find().lean();
     } catch (e) {
-        next(e)
+        throw e
     }
 };
 
 module.exports.updateItem = async (itemId, newObj) => {
     try {
-
-
+        return await Item.updateOne( { _id: itemId }, newObj)
     } catch(e) {
-        next(e)
+        throw e
     }
 };
 
+module.exports = router;
