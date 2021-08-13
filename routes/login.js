@@ -3,7 +3,7 @@ const router = Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt')
 const userDAO = require('../daos/user');
-const { isAuthorized } = require('../middleware/authentication');
+const { isAuthorized, secretKey } = require('../middleware/authentication');
 
 // - Login
 //   - Signup: `POST /login/signup`
@@ -70,8 +70,7 @@ router.post("/", async (req, res, next) => {
                             res.sendStatus(401);
                         } else {
                             const token = jwt.sign({ email: user.email, _id: user._id, roles: user.roles },
-                                secretKey);
-                                res.json({ token })
+                                secretKey, res.json(token))
                         }
                     })
                 }

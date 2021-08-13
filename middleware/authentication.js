@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const secretKey = process.env;
+const secretKey = 'super_secret_key';
 
 
 const isAuthorized = async (req, res, next) => {
@@ -24,4 +24,4 @@ const isAdmin = async (req, res, next) => {
         }
 };
 
-module.exports = { isAuthorized, isAdmin };
+module.exports = { isAuthorized, isAdmin, secretKey };
