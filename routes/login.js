@@ -10,7 +10,7 @@ const bCrypt = require('bcrypt');
 const userDAO = require('../daos/user');
 
 const isLoggedIn = require("../Middleware/isAuthorized");
-const errorReport = require("../middleware/ErrorReport");
+const errorReport = require("../Middleware/ErrorReport");
 
 router.use(async (req, res, next) => {
     console.log(`${req.method} ${req.url} at ${new Date()}`);
