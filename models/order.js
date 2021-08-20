@@ -6,5 +6,6 @@ const orderSchema = new mongoose.Schema({
   total: { type: Number, required: true }
 });
 
+orderSchema.index({ userId: 1});
 
 module.exports = mongoose.model("orders", orderSchema);
