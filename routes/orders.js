@@ -5,8 +5,8 @@ const ordersDAO = require('../daos/order');
 const itemsDAO = require('../daos/item');
 
 const isLoggedIn = require("../Middleware/isAuthorized");
-const isAdmin = require("../middleware/isAdmin");
-const errorReport = require("../middleware/ErrorReport");
+const isAdmin = require("../Middleware/isAdmin");
+const errorReport = require("../Middleware/ErrorReport");
 
 router.use(async (req, res, next) => {
     console.log(`${req.method} ${req.url} at ${new Date()}`);
