@@ -2,17 +2,18 @@ const { Router } = require("express");
 const bcrypt = require("bcrypt");
 const router = Router();
 
-const { isAuthorized } = require("../middleware/auth");
+const { isLoggedIn, isAdmin } = require("../middleware/auth");
 
 const userDAO = require('../daos/user');
 const tokenDAO = require('../daos/token');
+
 
 router.post("/signup", async (req, res, next) => {
   try {
     const user = req.body;
     const userEmail = user.email;
     const userPassword = user.password;
-    const userRoles = [user].roles;
+    const userRoles = user.roles;
     const userSignedUp = await userDAO.getUser(userEmail);
     if (userSignedUp) {
       res.sendStatus(409);
@@ -49,7 +50,7 @@ router.post("/", async (req, res, next) => {
         res.status(401).send('Unauthorized - Wrong password');
       } else {
         const token = await tokenDAO.getJwtForUser(savedUser);
-        res.json({token});
+        res.json({ token });
       }
     }
   } catch (e) {
@@ -62,10 +63,10 @@ router.post("/", async (req, res, next) => {
 });
 
 router.post("/logout", async (req, res, next) => {
-    res.sendStatus(404);
+  res.sendStatus(404);
 });
 
-router.use(isAuthorized);
+// router.use(isLoggedIn);
 
 router.post("/password", async (req, res, next) => {
   try {
@@ -83,4 +84,28 @@ router.post("/password", async (req, res, next) => {
   }
 });
 
+// router.use(isAdmin);
+
+router.get("/", async (req, res, next) => {
+  try {
+    const users = await userDAO.getAll();
+    res.json(users);
+  } catch (e) {
+    next(e);
+  }
+});
+
+
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const user = await userDAO.removeById(req.params.id);
+    if (!user) {
+      res.sendStatus(404);
+    } else {
+      res.sendStatus(200);
+    }
+  } catch (e) {
+    next(e);
+  }
+});
 module.exports = router;

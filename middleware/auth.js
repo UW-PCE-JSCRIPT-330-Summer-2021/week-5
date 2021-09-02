@@ -1,6 +1,6 @@
 const tokenDAO = require('../daos/token');
 
-module.exports.isAuthorized = async (req, res, next) => {
+module.exports.isLoggedIn = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
         if (!authHeader) {

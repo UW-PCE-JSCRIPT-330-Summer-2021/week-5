@@ -1,23 +1,14 @@
 {
-  "name": "week-5",
+  "name": "crypto-app",
   "version": "1.0.0",
-  "description": "This week is an exercise in authentication, authorization, and middleware.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "test": "jest --coverage --runInBand",
     "tdd": "jest --watch --runInBand"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/UW-PCE-JSCRIPT-330-Summer-2021/week-5.git"
-  },
   "author": "",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/UW-PCE-JSCRIPT-330-Summer-2021/week-5/issues"
-  },
-  "homepage": "https://github.com/UW-PCE-JSCRIPT-330-Summer-2021/week-5#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
     "express": "^4.17.1",
